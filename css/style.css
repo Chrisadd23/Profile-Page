@@ -1,0 +1,32 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Verhindert Scrollen bei 3D-Szene */
+}
+
+/* Header-Design */
+#main-header {
+  background-color: #333333;
+  color: #ffffff;
+  padding: 10px 20px;
+}
+
+#main-header nav h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+/* 3D-Container-Stil */
+#three-container {
+  width: 100vw; /* Nimmt volle Breite ein */
+  height: calc(100vh - 60px); /* Rest des Viewports abzüglich der Header-Höhe */
+  display: block;
+  position: relative;
+  border-top: 2px solid #444444; /* Abtrennung vom Header */
+  /* background-image: url('../asset/background2.png'); */
+  background-color: #222; /* Fallback Farbe zum Testen */
+  /* background-size: cover; */
+  /* background-position: center; */
+}
