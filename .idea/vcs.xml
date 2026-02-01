@@ -2,5 +2,13 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../dy-epic-backend" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../homepage" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../online_profile" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../programmingchallenge" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../timer-backend" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../watchPrcWeb" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../werewolf-backend" vcs="Git" />
   </component>
 </project>
