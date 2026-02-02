@@ -67,8 +67,8 @@ function initApp() {
       // Optional: Adjust model scale or position if needed
       // model.scale.set(1, 1, 1);
       // model.position.set(0, 0, 0);
-      model.rotation.x += 0.2;
-      model.rotation.y += 2.2;
+      model.rotation.x += 0.3;
+      model.rotation.y += 2.6;
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total * 100) + '% loaded');
