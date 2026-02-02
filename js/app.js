@@ -6,6 +6,12 @@ function initApp() {
     return;
   }
 
+  // Check if GLTFLoader is loaded
+  if (typeof THREE.GLTFLoader === 'undefined') {
+    alert('Error: GLTFLoader is not loaded. Please check your internet connection.');
+    return;
+  }
+
   const container = document.getElementById('three-container');
   if (!container) {
     alert('Error: Container element not found.');
@@ -28,28 +34,58 @@ function initApp() {
 
   // Scene
   const scene = new THREE.Scene();
-  scene.background = null; // Dark grey background
+  scene.background = null; // Transparent to let CSS background show
 
   // Camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  camera.position.z = 5;
+  camera.position.z = 20;
+
 
   // Renderer
-  const renderer = new THREE.WebGLRenderer({ antialias: true,alpha: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
   container.appendChild(renderer.domElement);
 
-  // Object: Cube (Simple Basic Material to ensure visibility without light)
-  const geometry = new THREE.BoxGeometry(2, 2, 2);
-  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
+  // Lights
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(5, 10, 7.5);
+  scene.add(directionalLight);
+
+  // Load GLB Model
+  let model;
+  const loader = new THREE.GLTFLoader();
+  loader.load(
+    'asset/blender/object/building.glb',
+    function (gltf) {
+      model = gltf.scene;
+      scene.add(model);
+      console.log('Model loaded successfully');
+
+      // Optional: Adjust model scale or position if needed
+      // model.scale.set(1, 1, 1);
+      // model.position.set(0, 0, 0);
+      model.rotation.x += 0.2;
+      model.rotation.y += 2.2;
+    },
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    function (error) {
+      console.error('An error happened loading the model', error);
+    }
+  );
 
   // Animation Loop
   function animate() {
     requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+
+    // if (model) {
+    //   model.rotation.y += 0.005; // Rotate the model
+    // }
+
     renderer.render(scene, camera);
   }
   animate();
