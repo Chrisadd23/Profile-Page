@@ -25,6 +25,7 @@ function initApp() {
   let width = container.clientWidth;
   let height = container.clientHeight;
 
+
   // Fallback if dimensions are 0
   if (width === 0 || height === 0) {
     width = window.innerWidth;
@@ -38,7 +39,8 @@ function initApp() {
 
   // Camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  camera.position.z = 20;
+  camera.position.z = 17;
+  camera.position.y = 2;
 
 
   // Renderer
@@ -56,6 +58,7 @@ function initApp() {
 
   // Load GLB Model
   let model;
+  let mixer;
   const loader = new THREE.GLTFLoader();
   loader.load(
     'asset/blender/object/building.glb',
@@ -64,11 +67,13 @@ function initApp() {
       scene.add(model);
       console.log('Model loaded successfully');
 
-      // Optional: Adjust model scale or position if needed
-      // model.scale.set(1, 1, 1);
-      // model.position.set(0, 0, 0);
+      // Set up the mixer
+      mixer = new THREE.AnimationMixer(model);
       model.rotation.x += 0.3;
       model.rotation.y += 2.6;
+      // Play the first animation clip found in the file
+      const action = mixer.clipAction(gltf.animations[0]);
+      action.play();
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -78,13 +83,13 @@ function initApp() {
     }
   );
 
+  const clock = new THREE.Clock();
   // Animation Loop
   function animate() {
     requestAnimationFrame(animate);
 
-    // if (model) {
-    //   model.rotation.y += 0.005; // Rotate the model
-    // }
+    const delta = clock.getDelta();
+    if (mixer) mixer.update(delta); // Update the animation state
 
     renderer.render(scene, camera);
   }
