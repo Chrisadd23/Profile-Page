@@ -39,7 +39,8 @@ function initApp() {
 
   // Camera
   const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  camera.position.z = 17;
+  camera.position.z = 30
+  ;
   camera.position.y = 2;
 
 
@@ -61,7 +62,7 @@ function initApp() {
   let mixer;
   const loader = new THREE.GLTFLoader();
   loader.load(
-    'asset/blender/object/building.glb',
+    'asset/blender/object/profilepage.glb',
     function (gltf) {
       model = gltf.scene;
       scene.add(model);
@@ -73,7 +74,12 @@ function initApp() {
       model.rotation.y += 2.6;
       // Play the first animation clip found in the file
       const action = mixer.clipAction(gltf.animations[0]);
+      const action1 = mixer.clipAction(gltf.animations[1]);
+      const action2 = mixer.clipAction(gltf.animations[2]);
+
       action.play();
+      action1.play();
+      action2.play();
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total * 100) + '% loaded');
