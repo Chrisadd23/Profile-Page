@@ -47,6 +47,12 @@ function initApp() {
   // Renderer
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.physicallyCorrectLights = true;
+
   container.appendChild(renderer.domElement);
 
   // Lights
@@ -62,7 +68,7 @@ function initApp() {
   let mixer;
   const loader = new THREE.GLTFLoader();
   loader.load(
-    'asset/blender/object/profilepage.glb',
+    'asset/blender/object/building1.glb',
     function (gltf) {
       model = gltf.scene;
       scene.add(model);
