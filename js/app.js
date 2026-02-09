@@ -12,6 +12,11 @@ function initApp() {
     return;
   }
 
+  // Check if OrbitControls is loaded
+  if (typeof THREE.OrbitControls === 'undefined') {
+    console.warn('Warning: OrbitControls is not loaded. Zooming might not work.');
+  }
+
   const container = document.getElementById('three-container');
   if (!container) {
     alert('Error: Container element not found.');
@@ -38,10 +43,11 @@ function initApp() {
   scene.background = null; // Transparent to let CSS background show
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-  camera.position.z = 30
-  ;
+  const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+  camera.position.z = 30;
   camera.position.y = 2;
+
+
 
 
   // Renderer
@@ -55,13 +61,37 @@ function initApp() {
 
   container.appendChild(renderer.domElement);
 
-  // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-  scene.add(ambientLight);
+  // Controls
+  let controls;
+  if (typeof THREE.OrbitControls !== 'undefined') {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = false;
+    controls.minDistance = 10;
+    controls.maxDistance = 100;
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(5, 10, 7.5);
-  scene.add(directionalLight);
+    // Lock vertical rotation (fixed height)
+    // We set min and max to the same value to prevent vertical movement
+    const verticalAngle = Math.PI / 3; // Ca. 60 Grad (Blick stärker von oben)
+    controls.minPolarAngle = verticalAngle;
+    controls.maxPolarAngle = verticalAngle;
+
+    // Limit horizontal rotation to +/- 30 degrees
+    const angleLimit = 30 * (Math.PI / 180); // Convert 30 degrees to radians
+    controls.minAzimuthAngle = -angleLimit;
+    controls.maxAzimuthAngle = angleLimit;
+  }
+
+  // Ambient
+  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambient);
+
+// Directional (Hauptlicht)
+  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+  dir.position.set(5, 8, 5);
+  dir.castShadow = true;
+  scene.add(dir);
 
   // Load GLB Model
   let model;
@@ -71,21 +101,20 @@ function initApp() {
     'asset/blender/object/building1.glb',
     function (gltf) {
       model = gltf.scene;
+
       scene.add(model);
       console.log('Model loaded successfully');
 
       // Set up the mixer
       mixer = new THREE.AnimationMixer(model);
-      model.rotation.x += 0.3;
+      model.rotation.x += 0;
       model.rotation.y += 2.6;
       // Play the first animation clip found in the file
-      const action = mixer.clipAction(gltf.animations[0]);
-      const action1 = mixer.clipAction(gltf.animations[1]);
-      const action2 = mixer.clipAction(gltf.animations[2]);
+      if (gltf.animations && gltf.animations.length > 0) {
+          const action = mixer.clipAction(gltf.animations[0]);
+          action.play();
+      }
 
-      action.play();
-      action1.play();
-      action2.play();
     },
     function (xhr) {
       console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -102,6 +131,8 @@ function initApp() {
 
     const delta = clock.getDelta();
     if (mixer) mixer.update(delta); // Update the animation state
+
+    if (controls) controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
 
     renderer.render(scene, camera);
   }
