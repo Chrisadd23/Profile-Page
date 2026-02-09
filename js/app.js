@@ -124,6 +124,30 @@ function initApp() {
     }
   );
 
+  // Raycaster und Maus-Vektor initialisieren
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  // Event-Listener für Klicks auf das Canvas
+  renderer.domElement.addEventListener('click', (event) => {
+    if (!model) return; // Nichts tun, wenn das Modell noch nicht geladen ist
+
+    // Mausposition relativ zum Canvas berechnen (-1 bis +1)
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // Strahl von der Kamera aus senden
+    raycaster.setFromCamera(mouse, camera);
+
+    // Prüfen, ob das Modell getroffen wurde (true = auch Unterobjekte prüfen)
+    const intersects = raycaster.intersectObject(model, true);
+
+    if (intersects.length > 0) {
+      alert('Objekt angetippt!');
+    }
+  });
+
   const clock = new THREE.Clock();
   // Animation Loop
   function animate() {
