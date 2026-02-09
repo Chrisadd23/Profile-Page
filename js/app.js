@@ -102,6 +102,21 @@ function initApp() {
     function (gltf) {
       model = gltf.scene;
 
+      // Apply emission settings to specific object
+      model.traverse((child) => {
+        console.log("child.name:", child.name);
+        if (child.isMesh && child.name === 'Building1digitalWindow') {
+          console.log("test");
+          child.material.color.set(0xD857FF);
+          child.material.emissiveIntensity = 5;
+          // If emissive color is black (default), set it to white so the intensity has an effect
+          if (child.material.emissive.getHex() === 0) {
+            child.material.emissive.set(0xD857FF);
+          }
+          console.log('Applied emission to Building1.digitalWindow');
+        }
+      });
+
       scene.add(model);
       console.log('Model loaded successfully');
 
