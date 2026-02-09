@@ -25,8 +25,8 @@ body, html {
   display: block;
   position: relative;
   border-top: 2px solid #444444; /* Abtrennung vom Header */
-   /*background-image: url('../asset/background2.png');*/
+  background-image: url('../asset/background7.png');
   background-color: #222; /* Fallback Farbe zum Testen */
-  /* background-size: cover; */
-  /* background-position: center; */
+  background-size: cover;
+  background-position: center;
 }
